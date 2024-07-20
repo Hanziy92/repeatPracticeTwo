@@ -84,3 +84,4 @@ document.addEventListener('DOMContentLoaded', () => {
     makeChanges();
     createMovieList(movieDB.movies, moviesList);
 });
+
