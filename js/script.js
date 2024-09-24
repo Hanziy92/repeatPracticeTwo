@@ -189,16 +189,11 @@ const tabs = document.querySelectorAll('.tabheader__item'),
    // Modal
 
    const modalTrigger = document.querySelectorAll('[data-modal]'),
-         modal = document.querySelector('.modal'),
-         modalCloseBtn = document.querySelector('[data-close]');
+   modal = document.querySelector('.modal');
 
    modalTrigger.forEach(btn => {
-      btn.addEventListener('click', ()=>{
-         modal.classList.add('show');
-         modal.classList.remove('hide');
-         document.body.style.overflow = 'hidden';
-      })
-   })
+      btn.addEventListener('click', openModal);
+   });
 
    function closeModal() {
       modal.classList.add('hide');
@@ -206,21 +201,38 @@ const tabs = document.querySelectorAll('.tabheader__item'),
       document.body.style.overflow = '';
    }
 
-   modalCloseBtn.addEventListener('click', closeModal);
+   function openModal() {
+      modal.classList.add('show');
+      modal.classList.remove('hide');
+      document.body.style.overflow = 'hidden';
+      clearInterval(modalTimerId);
+   }
 
    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
+      if (e.target === modal || e.target.getAttribute('data-close') == '') {
          closeModal();
       }
    });
 
    document.addEventListener('keydown', (e) => {
-     if (e.code === 'Escape' && modal.classList.contains('show')) {
+      if (e.code === "Escape" && modal.classList.contains('show')) { 
          closeModal();
-     }
+      }
    });
 
+   const modalTimerId = setTimeout(openModal, 300000);
+   
 
+   function showModalByScroll() {
+      if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+         openModal();
+         window.removeEventListener('scroll', showModalByScroll);
+      }
+   };
+
+   window.addEventListener('scroll', showModalByScroll);
+
+   // menu Card
    class MenuCard {
       constructor(src, alt, title, descr, price, parentSelector, ...classes) {
          this.src = src;
@@ -313,7 +325,7 @@ const tabs = document.querySelectorAll('.tabheader__item'),
    const forms = document.querySelectorAll('form');
 
    const messege = {
-      loading: 'Загрузка',
+      loading: 'img/forms/spinner.svg',
       success: 'Дякую, ми з вами зв`яжемся',
       failure: 'Щось пішло не так...'
    };
@@ -326,12 +338,15 @@ const tabs = document.querySelectorAll('.tabheader__item'),
       form.addEventListener('sumbit', (e) => {
          e.preventDefault();
 
-         const statusMessege = document.createElement('div');
-         statusMessege.classList.add('status');
-         statusMessege.textContent = messege.loading;
-         form.append(statusMessege);
+         const statusMessege = document.createElement('img');
+         statusMessege.src = messege.loading;
+         statusMessege.style.cssText = `
+            display: block;
+            margin: 0 auto;
+         `;
+         form.insertAjacentElement('afterand', statusMessege);
 
-         const r = new XMLHttpRequest();
+         const r = new XMLHttpRequest();  
          r.open('POST', 'server.php');
 
          // r.setRequestHeader('Content-type', 'multipart/from-data');
@@ -350,17 +365,39 @@ const tabs = document.querySelectorAll('.tabheader__item'),
          r.addEventListener('load', () => {
             if (r.status === 200) {
                console.log(r.response);
-               statusMessege.textContent = messege.success;
+               showThanksModal(messege.success);
                form.reset();
-               setTimeout(() => {
-                  statusMessege.remove();
-               }, 2000);
+               statusMessege.remove();             
             } else {
-               statusMessege.textContent = messege.failure;
+               showThanksModal(messege.failure);
             }
          });
 
       });
+   }
+
+   function showThanksModal(messege) {
+      const prevModalDialog = document.querySelector('.modal__dialog');
+
+      prevModalDialog.classList.add('hide');
+      openModal();
+
+      const thanksModal = document.createElement('div');
+      thanksModal.classList.add('modal__dialog');
+      thanksModal.innerHTML = `
+         <div class="modal__content">
+            <div class="modal__close" data-close>×</div>
+            <div class="modal__title">${messege}</div>
+         </div>
+      `;
+
+      document.querySelector('.modal').append(thanksModal);
+      setTimeout(() => {
+         thanksModal.remove();
+         prevModalDialog.classList.add('show');
+         prevModalDialog.classList.remove('hide');
+         closeModal();
+      }, 4000);
    }
 
 });
