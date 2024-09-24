@@ -88,26 +88,26 @@
 
 
 window.addEventListener('DOMContentLoaded', () => {
-   const tabs = document.querySelectorAll('.tabheader__item'),
-         tabsContent = document.querySelectorAll('.tabcontent'),
-         tabsParent = document.querySelector('.tabheader__items');
+
+const tabs = document.querySelectorAll('.tabheader__item'),
+      tabsContent = document.querySelectorAll('.tabcontent'),
+      tabsParent = document.querySelector('.tabheader__items');
 
 
    function hidetabContent() {
-         tabsContent.forEach(item => {
-            item.classList.add('hide');
-            item.classList.remove('show', 'fade');
-         });
-
-         tabs.forEach(item => {
-            item.classList.remove('tabheader__item_active');
-         });
+      tabsContent.forEach(item => {
+         item.classList.remove('show', 'fade');
+         item.classList.add('hide');
+      });
+      tabs.forEach(item => {
+         item.classList.remove('tabheader__item_active');
+      });
    }
 
    function showtabContent(i = 0) {
-      tabsContent[i].classList.add('show', 'fade');
-      tabsContent[i].classList.remove('hide');
       tabs[i].classList.add('tabheader__item_active');
+      tabsContent[i].classList.remove('hide');
+      tabsContent[i].classList.add('show', 'fade');
    }
 
    hidetabContent();
@@ -115,36 +115,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
    tabsParent.addEventListener('click', (e) => {
       const target = e.target;
-
       if (target && target.classList.contains('tabheader__item')) {
          tabs.forEach((item, i) => {
-            if (target == item) {
+            if (target === item) {
                hidetabContent();
-               showtabContent(i);
+               showtabContent(i); 
             }
          });
       }
    });
 
-
    // Tiimer
+
 
    const deadline = '2024-10-04';
 
    function getTimeRemaining(endtime) {
       let days, hours, minutes, seconds;
-      const t =  Date.parse(endtime) - Date.parse(new Date());
-      if(t <= 0) {
+      const t = Date.parse(endtime) - Date.parse(new Date());
+      if (t <= 0) {
          days = 0;
          hours = 0;
          minutes = 0;
          seconds = 0;
-      }  else {
-            days = Math.floor(t / (1000 * 60 * 60 * 24));
-            hours = Math.floor((t / (1000 * 60 * 60) % 24));
-            minutes = Math.floor((t / 1000 / 60) % 60);
-            seconds = Math.floor((t / 1000) % 60);
-         } 
+      } else {
+         days = Math.floor(t / (1000 * 60 * 60 * 24));
+         hours = Math.floor((t / (1000 * 60 * 60) % 24));
+         minutes = Math.floor((t / 1000 / 60) % 60);
+         seconds = Math.floor((t / 1000) % 60);
+      }
       return {
          total: t,
          days: days,
@@ -153,7 +152,7 @@ window.addEventListener('DOMContentLoaded', () => {
          seconds: seconds
       };
    }
-
+   
    function getZero(num) {
       if (num >= 0 && num < 10) {
          return `0${num}`;
@@ -169,12 +168,11 @@ window.addEventListener('DOMContentLoaded', () => {
             minutes = timer.querySelector('#minutes'),
             seconds = timer.querySelector('#seconds'),
             timeInterval = setInterval(updateClock, 1000);
-             
+
       updateClock();
 
       function updateClock() {
          const t = getTimeRemaining(endtime);
-
          days.innerHTML = getZero(t.days);
          hours.innerHTML = getZero(t.hours);
          minutes.innerHTML = getZero(t.minutes);
@@ -183,7 +181,7 @@ window.addEventListener('DOMContentLoaded', () => {
          if (t.total <= 0) {
             clearInterval(timeInterval);
          }
-      }
+      }  
    }
 
    setClock('.timer', deadline);
@@ -280,39 +278,89 @@ window.addEventListener('DOMContentLoaded', () => {
       // }
    }
 
-  new MenuCard(
-   "img/tabs/vegy.jpg",
-   "vegy",
-   'Меню "Фитнес"',
-   'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-   9,
-   '.menu .container',
+   new MenuCard(
+      "img/tabs/vegy.jpg",
+      "vegy",
+      'Меню "Фитнес"',
+      'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+      9,
+      '.menu .container',
     
-  ).render();
+   ).render(); 
 
-  new MenuCard(
-   "img/tabs/elite.jpg",
-   "elite",
-   'Меню “Премиум”',
-   'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-   14,
-   '.menu .container',
-   'menu__item'
-  ).render();
+   new MenuCard(
+      "img/tabs/elite.jpg",
+      "elite",
+      'Меню “Премиум”',
+      'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+      14,
+      '.menu .container',
+      'menu__item'
+   ).render();
 
-  new MenuCard(
-   "img/tabs/post.jpg",
-   "post",
-   'Меню "Постное"',
-   'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-   21,
-   '.menu .container',
-   'menu__item'
-  ).render();
+   new MenuCard(
+      "img/tabs/post.jpg",
+      "post",
+      'Меню "Постное"',
+      'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+      21,
+      '.menu .container',
+      'menu__item'
+   ).render();
+   
+  // Forms
 
+   const forms = document.querySelectorAll('form');
 
+   const messege = {
+      loading: 'Загрузка',
+      success: 'Дякую, ми з вами зв`яжемся',
+      failure: 'Щось пішло не так...'
+   };
+
+   forms.forEach(item => {
+      postData(item);
+   });
+
+   function postData(form) {
+      form.addEventListener('sumbit', (e) => {
+         e.preventDefault();
+
+         const statusMessege = document.createElement('div');
+         statusMessege.classList.add('status');
+         statusMessege.textContent = messege.loading;
+         form.append(statusMessege);
+
+         const r = new XMLHttpRequest();
+         r.open('POST', 'server.php');
+
+         // r.setRequestHeader('Content-type', 'multipart/from-data');
+         r.setRequestHeader('Content-type', 'application/json');
+         const formData = new FormData(form);
+
+         const obj = {};
+
+         formData.forEach((item, key) => {
+            obj[key] = item;
+         });
+
+         const json = JSON.stringify(obj);
+         r.send(json);
+
+         r.addEventListener('load', () => {
+            if (r.status === 200) {
+               console.log(r.response);
+               statusMessege.textContent = messege.success;
+               form.reset();
+               setTimeout(() => {
+                  statusMessege.remove();
+               }, 2000);
+            } else {
+               statusMessege.textContent = messege.failure;
+            }
+         });
+
+      });
+   }
 
 });
-
-
-
